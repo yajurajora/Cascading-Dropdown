@@ -1,0 +1,96 @@
+﻿@model Dropdown.Models.Continents
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //var items = "<option value='0'>Select</option>";
+        //$('#CountryId').html(items);
+        //$('#ContinentId').html(items);
+
+        $('#ContinentId').change(function () {
+            var url = '@Url.Content("~/")' + "Home/GetCountry";
+            var ddlsource = "#ContinentId";
+            $.getJSON(url, { ContinentId: $(ddlsource).val() }, function (data) {
+                var items = '';
+                $('#CountriesId').empty();
+                $.each(data, function (i, Countries) {
+                    items += "<option value='" + Countries.value + "'>" + Countries.text + "</option>";
+                });
+
+                $('#CountriesId').html(items);
+            });
+        });
+
+        $('#CountriesId').change(function () {
+           
+            var url = '@Url.Content("~/")' + "Home/GetCities";
+            var ddlsource = "#CountriesId";
+            $.getJSON(url, { CountriesId: $(ddlsource).val() }, function (data) {
+                var items = '';
+                $('#CitiesId').empty();
+                $.each(data, function (i, Cities) {
+                    items += "<option value='" + Cities.value + "'>" + Cities.text + "</option>";
+                });
+
+                $('#CitiesId').html(items);
+            });
+        });
+
+    });
+
+</script>
+
+@{
+    <form asp-controller="Home" asp-action="Index" method="post" class="form-horizontal" role="form">
+        <div class="form-group">
+            <div class="row">
+                <div class="alert-danger" asp-validation-summary="ModelOnly"></div>
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <label asp-for="Name" class="control-label">Continents</label>
+                    <select asp-for="ContinentId"
+                            class="form-control"
+                            asp-items="@(new SelectList(@ViewBag.ListOfContinents,"ContinentId","Name"))"></select>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="alert-danger" asp-validation-summary="ModelOnly"></div>
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <label asp-for="Name" class="control-label">Country</label>
+                    <select asp-for="CountriesId"
+                            class="form-control" id="CountriesId"
+                            asp-items="@(new SelectList(string.Empty,"CountriesId","Name"))"></select>
+                </div>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="alert-danger" asp-validation-summary="ModelOnly"></div>
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <label asp-for="Name" class="control-label">Cities</label>
+                    <select asp-for="CitiesId"
+                            class="form-control" id="CitiesId"
+                            asp-items="@(new SelectList(string.Empty,"CitiesId","Name"))"></select>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <input id="Submit1" type="submit" value="Submit" />
+                </div>
+            </div>
+        </div>
+    </form>
+
+}
+
